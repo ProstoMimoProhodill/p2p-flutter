@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Get battery level.
   String _batteryLevel = 'Unknown battery level.';
+  String _ssid = 'ssid...';
 
   Future<void> _getBatteryLevel() async {
     String batteryLevel;
@@ -65,6 +66,20 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _getSSIDNames() async {
+    String ssid;
+    try {
+      final String result = await platform.invokeMethod('getSSIDNames');
+      ssid = result;
+    } on PlatformException catch (e) {
+      ssid = "Failed to get ssid: '${e.message}'.";
+    }
+
+    setState(() {
+      _ssid = ssid;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -73,10 +88,10 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             RaisedButton(
-              child: Text('Get Battery Level'),
+              child: Text('Get ssid'),
               onPressed: _getBatteryLevel,
             ),
-            Text(_batteryLevel),
+            Text(_ssid),
           ],
         ),
       ),
